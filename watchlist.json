@@ -1,46 +1,119 @@
 {
   "categories": {
-    "Mjölk": [
+    "Mejeri": [
       "mlijeko",
-      "mleko"
+      "jogurt",
+      "kefir",
+      "vrhnje",
+      "sir",
+      "maslac",
+      "margarin"
     ],
-    "Potatis": [
-      "krumpir"
+    "Frukt & grönt": [
+      "krumpir",
+      "banana",
+      "rajčica",
+      "rajcica",
+      "paradajz",
+      "jabuka",
+      "lubenica",
+      "paprika",
+      "luk",
+      "salata",
+      "mrkva",
+      "krastavac",
+      "grožđe",
+      "grozde"
+    ],
+    "Kött & fågel": [
+      "piletina",
+      "pileći",
+      "pileca",
+      "svinjetina",
+      "junetina",
+      "govedina",
+      "meso",
+      "pureći",
+      "pureca"
+    ],
+    "Fisk & skaldjur": [
+      "riba",
+      "tuna",
+      "losos",
+      "sardina",
+      "oslić",
+      "oslic",
+      "kozice",
+      "škampi",
+      "skampi"
     ],
     "Ägg": [
       "jaja"
     ],
-    "Smör": [
-      "maslac"
+    "Bröd & bageri": [
+      "kruh",
+      "pecivo",
+      "toast",
+      "tost",
+      "baget"
     ],
-    "Kyckling": [
-      "piletina",
-      "pileći",
-      "pileca"
+    "Pasta, ris & mjöl": [
+      "tjestenina",
+      "riža",
+      "riza",
+      "brašno",
+      "brasno",
+      "palenta"
     ],
-    "Bananer": [
-      "banana"
+    "Konserver": [
+      "konzerva",
+      "grah",
+      "kukuruz",
+      "slanutak",
+      "pašteta",
+      "pasteta"
     ],
-    "Tomater": [
-      "rajčica",
-      "rajcica",
-      "paradajz"
+    "Dryck": [
+      "voda",
+      "sok",
+      "cola",
+      "limunada",
+      "čaj",
+      "caj",
+      "kava"
     ],
-    "Vatten": [
-      "voda"
-    ],
-    "Blöjor": [
-      "pelene"
-    ],
-    "Våtservetter": [
+    "Barn": [
+      "pelene",
       "vlažne maramice",
-      "vlazne maramice"
-    ],
-    "Barnmat": [
+      "vlazne maramice",
       "dječja hrana",
       "djecja hrana",
       "kašica",
-      "kasica"
+      "kasica",
+      "baby"
+    ],
+    "Hushåll": [
+      "deterdžent",
+      "deterdzent",
+      "omekšivač",
+      "omeksivac",
+      "toaletni papir",
+      "sredstvo za čišćenje",
+      "sredstvo za ciscenje"
+    ],
+    "Glass & fryst": [
+      "sladoled",
+      "smrznuto",
+      "zamrznuto"
+    ],
+    "Snacks & sötsaker": [
+      "čokolada",
+      "cokolada",
+      "keks",
+      "čips",
+      "cips",
+      "bombon",
+      "grickalice"
     ]
   }
 }

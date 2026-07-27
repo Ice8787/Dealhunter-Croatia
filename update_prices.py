@@ -109,8 +109,9 @@ def parse_payload(url,data,content_type):
 def classify(name):
     low=name.lower()
     for category,terms in WATCH["categories"].items():
-        if any(t.lower() in low for t in terms): return category
-    return None
+        if any(t.lower() in low for t in terms):
+            return category
+    return "Övrigt"
 
 def quantity_unit(name,row):
     q=parse_number(pick(row,QTY_KEYS))
@@ -146,14 +147,13 @@ def process_rows(store, rows, keywords, source_url):
         raw_name=norm(pick(row,NAME_KEYS))
         if not raw_name: continue
         category=classify(raw_name)
-        if not category: continue
         price=parse_number(pick(row,PRICE_KEYS))
         if price is None or price<=0: continue
         location=norm(pick(row,STORE_KEYS))
         if not location_allowed(location,keywords): continue
         qty,unit=quantity_unit(raw_name,row)
         items.append({
-          "product":category,
+          "product":raw_name,
           "raw_name":raw_name,
           "category":category,
           "emoji":{"Mjölk":"🥛","Potatis":"🥔","Ägg":"🥚","Smör":"🧈","Kyckling":"🍗","Bananer":"🍌","Tomater":"🍅","Vatten":"💧","Blöjor":"👶","Våtservetter":"🧻","Barnmat":"🍼"}.get(category,"🛒"),
@@ -207,7 +207,7 @@ def main():
         dedup[key]=x
     items=list(dedup.values())
     items.sort(key=lambda x:(x["product"],x["unit_price"],x["store"]))
-    payload={"meta":{"generated_at":datetime.now(timezone.utc).isoformat(),"sources":statuses,"note":"Automatically generated from publicly discoverable retailer price-list files. Missing stores are shown in source status."},"items":items}
+    payload={"meta":{"generated_at":datetime.now(timezone.utc).isoformat(),"sources":statuses,"note":"Automatiskt skapat från offentligt upptäckbara prislistor. Kontrollera butik och datum före köp."},"items":items}
     OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding="utf-8")
     print(json.dumps({"items":len(items),"sources":statuses},ensure_ascii=False))
     # Do not fail the workflow if one retailer changes its page; fail only if all sources fail.
