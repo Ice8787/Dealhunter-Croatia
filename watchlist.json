@@ -1,0 +1,46 @@
+{
+  "categories": {
+    "Mjölk": [
+      "mlijeko",
+      "mleko"
+    ],
+    "Potatis": [
+      "krumpir"
+    ],
+    "Ägg": [
+      "jaja"
+    ],
+    "Smör": [
+      "maslac"
+    ],
+    "Kyckling": [
+      "piletina",
+      "pileći",
+      "pileca"
+    ],
+    "Bananer": [
+      "banana"
+    ],
+    "Tomater": [
+      "rajčica",
+      "rajcica",
+      "paradajz"
+    ],
+    "Vatten": [
+      "voda"
+    ],
+    "Blöjor": [
+      "pelene"
+    ],
+    "Våtservetter": [
+      "vlažne maramice",
+      "vlazne maramice"
+    ],
+    "Barnmat": [
+      "dječja hrana",
+      "djecja hrana",
+      "kašica",
+      "kasica"
+    ]
+  }
+}

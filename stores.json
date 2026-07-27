@@ -1,0 +1,57 @@
+{
+  "home": {
+    "name": "Pirovac",
+    "lat": 43.819,
+    "lon": 15.667
+  },
+  "max_distance_km": 35,
+  "stores": {
+    "Konzum": {
+      "landing_pages": [
+        "https://www.konzum.hr/usluge",
+        "https://www.konzum.hr/"
+      ],
+      "location_keywords": [
+        "Pirovac",
+        "Vodice",
+        "Šibenik",
+        "Biograd",
+        "Murter",
+        "Tisno"
+      ]
+    },
+    "Plodine": {
+      "landing_pages": [
+        "https://www.plodine.hr/info-o-cijenama"
+      ],
+      "location_keywords": [
+        "Vodice",
+        "Šibenik",
+        "Biograd",
+        "Zadar"
+      ]
+    },
+    "Lidl": {
+      "landing_pages": [
+        "https://www.lidl.hr/",
+        "https://www.lidl.hr/c/online-katalog/"
+      ],
+      "location_keywords": [
+        "Vodice",
+        "Šibenik",
+        "Biograd",
+        "Zadar"
+      ]
+    },
+    "Kaufland": {
+      "landing_pages": [
+        "https://www.kaufland.hr/",
+        "https://www.kaufland.hr/usluge/cjenici.html"
+      ],
+      "location_keywords": [
+        "Šibenik",
+        "Zadar"
+      ]
+    }
+  }
+}
