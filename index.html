@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f766e"><meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest"><title>DealHunter Grocery Croatia</title>
+<style>
+:root{--bg:#f3f7f5;--card:#fff;--text:#15211e;--muted:#66736f;--line:#dbe5e1;--accent:#0f766e;--good:#15803d;--warn:#b45309;--shadow:0 8px 24px rgba(15,118,110,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}
+header{position:sticky;top:0;z-index:10;background:rgba(243,247,245,.94);backdrop-filter:blur(15px);border-bottom:1px solid var(--line)}
+.head{max-width:1250px;margin:auto;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{display:flex;gap:10px;align-items:center}.logo{width:42px;height:42px;border-radius:13px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:22px}
+h1{font-size:18px;margin:0}.muted{color:var(--muted);font-size:12px}.wrap{max-width:1250px;margin:auto;padding:16px 16px 70px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow)}
+.status{padding:13px;margin-bottom:14px}.ok{background:#ecfdf5}.warn{background:#fff7ed}
+.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:14px}.tab{border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:999px;font-weight:700;white-space:nowrap}.tab.active{background:var(--accent);color:#fff}
+.panel{display:none}.panel.active{display:block}.filters{padding:13px;display:grid;grid-template-columns:2fr repeat(4,1fr);gap:9px;margin-bottom:14px}
+input,select,button{font:inherit;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff}button{cursor:pointer}.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px}.section{padding:14px}.section h2{font-size:18px;margin:0 0 10px}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}
+.item h3{font-size:15px;margin:0 0 4px}.price{text-align:right}.price strong{display:block;font-size:20px}
+.tag{display:inline-block;padding:4px 7px;border-radius:999px;background:#eef3f1;font-size:11px;margin:5px 4px 0 0}.tag.good{background:#dcfce7;color:#166534}
+.row{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}
+.comparegrid,.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.comparecard,.plan{padding:15px}.plan.best{border:2px solid var(--accent)}
+.big{font-size:27px;font-weight:800}.empty{padding:30px;text-align:center;color:var(--muted)}
+.fav{border:0;background:transparent;font-size:20px;padding:2px}.toolbar{display:flex;gap:7px;flex-wrap:wrap}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr 1fr}.comparegrid,.plans{grid-template-columns:1fr}}
+@media(max-width:560px){.filters{grid-template-columns:1fr}.item{grid-template-columns:1fr}.price{text-align:left}.hidephone{display:none}}
+</style></head>
+<body>
+<header><div class="head"><div class="brand"><div class="logo">🛒</div><div><h1>DealHunter Grocery Croatia</h1><div class="muted">Konzum · Plodine · Lidl · Kaufland</div></div></div><button class="primary" id="refresh">Uppdatera</button></div></header>
+<main class="wrap">
+<div id="status" class="card status">Läser prisdata…</div>
+<nav class="tabs"><button class="tab active" data-tab="prices">Priser</button><button class="tab" data-tab="compare">Jämför</button><button class="tab" data-tab="basket">Smart Basket</button><button class="tab" data-tab="favorites">Favoriter</button><button class="tab" data-tab="sources">Källstatus</button></nav>
+
+<section id="prices" class="panel active">
+<div class="card filters"><input id="search" placeholder="Sök mjölk, potatis, blöjor..."><select id="category"></select><select id="store"></select><select id="distance"><option value="999">Alla avstånd</option><option value="10">Max 10 km</option><option value="20">Max 20 km</option><option value="35">Max 35 km</option></select><select id="sort"><option value="unit">Lägsta jämförpris</option><option value="price">Lägsta pris</option><option value="distance">Närmaste</option></select></div>
+<div class="grid"><section class="card section"><h2>Prisregister <span class="muted" id="count"></span></h2><div id="list"></div></section><aside><section class="card section"><h2>Inköpslista</h2><div id="cart"></div><button id="clear" class="hidephone">Töm lista</button></section><section class="card section"><h2>Snabbjämförelse</h2><select id="quickProduct" style="width:100%"></select><div id="quick"></div></section></aside></div>
+</section>
+
+<section id="compare" class="panel"><div class="card filters" style="grid-template-columns:2fr 1fr"><select id="compareProduct"></select><select id="compareSort"><option value="unit">Jämförpris</option><option value="price">Förpackningspris</option></select></div><div id="compareCards" class="comparegrid"></div></section>
+
+<section id="basket" class="panel"><div class="card filters" style="grid-template-columns:1fr 1fr"><label>Resekostnad €/km<input id="fuel" type="number" step="0.01" value="0.25"></label><label>Max butiker<select id="maxStores"><option>1</option><option selected>2</option><option>3</option></select></label></div><div id="plans" class="plans"></div></section>
+
+<section id="favorites" class="panel"><section class="card section"><h2>Favoritvaror</h2><div id="favList"></div></section></section>
+<section id="sources" class="panel"><section class="card section"><h2>Datakällor</h2><div id="sourceList"></div><p class="muted">Om en kedja visar “no_file” har dess sida eller filadress ändrats. Övriga kedjor fortsätter ändå fungera.</p></section></section>
+</main>
+<script>
+let data={meta:{},items:[]},prices=[],cart=JSON.parse(localStorage.getItem("dh_cart")||"[]"),favs=JSON.parse(localStorage.getItem("dh_favs")||"[]");
+const $=s=>document.querySelector(s),money=n=>"€"+Number(n||0).toFixed(2),unit=p=>Number(p.unit_price??(p.quantity?p.price/p.quantity:p.price)),ul=u=>u==="kg"?"/kg":u==="l"?"/l":u==="st"?"/st":"";
+function save(){localStorage.setItem("dh_cart",JSON.stringify(cart));localStorage.setItem("dh_favs",JSON.stringify(favs))}
+async function load(){try{let r=await fetch("./prices.json?t="+Date.now(),{cache:"no-store"});data=await r.json();prices=data.items||[];$("#status").className="card status ok";$("#status").innerHTML=`Senast uppdaterad: <strong>${data.meta?.generated_at||"okänt"}</strong> · ${prices.length.toLocaleString("sv-SE")} priser`;}catch(e){$("#status").className="card status warn";$("#status").textContent="Kunde inte läsa prices.json. Kontrollera Actions-körningen."}render()}
+function uniq(k){return [...new Set(prices.map(x=>x[k]).filter(Boolean))].sort()}
+function options(){let cats=uniq("category"),stores=uniq("store"),products=uniq("product");$("#category").innerHTML='<option value="">Alla kategorier</option>'+cats.map(x=>`<option>${x}</option>`).join("");$("#store").innerHTML='<option value="">Alla butiker</option>'+stores.map(x=>`<option>${x}</option>`).join("");$("#compareProduct").innerHTML=products.map(x=>`<option>${x}</option>`).join("");$("#quickProduct").innerHTML=products.slice(0,1000).map(x=>`<option>${x}</option>`).join("")}
+function filtered(){let q=$("#search").value.toLowerCase(),c=$("#category").value,s=$("#store").value,d=+$("#distance").value,sort=$("#sort").value,a=prices.filter(p=>(!q||[p.product,p.raw_name,p.store,p.category].join(" ").toLowerCase().includes(q))&&(!c||p.category===c)&&(!s||p.store===s)&&(p.distance_km==null||p.distance_km<=d));let f={unit:(a,b)=>unit(a)-unit(b),price:(a,b)=>a.price-b.price,distance:(a,b)=>(a.distance_km??999)-(b.distance_km??999)};return a.sort(f[sort]).slice(0,500)}
+function renderList(){let a=filtered();$("#count").textContent=`(${a.length} visade)`;$("#list").innerHTML=a.length?a.map(p=>`<div class="item"><div><h3><button class="fav" onclick="toggleFav('${encodeURIComponent(p.product)}')">${favs.includes(p.product)?"★":"☆"}</button> ${p.emoji||"🛒"} ${p.product}</h3><div class="muted">${p.store}${p.location?" · "+p.location:""}${p.distance_km!=null?" · "+p.distance_km+" km":""}</div><span class="tag good">${money(unit(p))}${ul(p.unit)}</span><span class="tag">${p.category||"Övrigt"}</span><div class="muted">${p.raw_name||""}</div></div><div class="price"><strong>${money(p.price)}</strong><div class="muted">${p.quantity||1} ${p.unit||""}</div><button onclick="addCart('${encodeURIComponent(p.product)}')">+ Lista</button></div></div>`).join(""):'<div class="empty">Inga träffar.</div>'}
+function renderCart(){$("#cart").innerHTML=cart.length?cart.map(x=>`<div class="row"><span>${x.product} × ${x.qty}</span><span><button onclick="qty('${encodeURIComponent(x.product)}',-1)">−</button> <button onclick="qty('${encodeURIComponent(x.product)}',1)">+</button></span></div>`).join(""):'<div class="muted">Listan är tom.</div>'}
+function comparison(product,target){let a=prices.filter(p=>p.product===product).sort((x,y)=>unit(x)-unit(y));target.innerHTML=a.slice(0,10).map((p,i)=>`<div class="row"><span>${i===0?"🥇 ":""}${p.store}<div class="muted">${p.location||""}</div></span><strong>${money(unit(p))}${ul(p.unit)}</strong></div>`).join("")||'<div class="muted">Ingen data.</div>'}
+function renderCompare(){let p=$("#compareProduct").value,mode=$("#compareSort").value,a=prices.filter(x=>x.product===p).sort((x,y)=>(mode==="unit"?unit(x):x.price)-(mode==="unit"?unit(y):y.price));$("#compareCards").innerHTML=a.slice(0,12).map((x,i)=>`<article class="card comparecard"><div class="big">${i===0?"🥇 ":""}${x.store}</div><h2>${money(mode==="unit"?unit(x):x.price)}${mode==="unit"?ul(x.unit):""}</h2><div class="muted">${x.location||""}<br>${x.raw_name||""}</div></article>`).join("")||'<div class="card empty">Ingen data.</div>'}
+function combos(a,k){let r=[];function f(i,c){if(c.length===k){r.push([...c]);return}for(let j=i;j<a.length;j++){c.push(a[j]);f(j+1,c);c.pop()}}f(0,[]);return r}
+function renderPlans(){if(!cart.length){$("#plans").innerHTML='<div class="card empty">Lägg till varor först.</div>';return}let fuel=+$("#fuel").value,max=+$("#maxStores").value,stores=uniq("store"),plans=[];for(let k=1;k<=max;k++)for(let set of combos(stores,k)){let total=0,ok=true,lines=[];for(let c of cart){let o=prices.filter(p=>p.product===c.product&&set.includes(p.store)).sort((a,b)=>unit(a)-unit(b))[0];if(!o){ok=false;break}total+=o.price*c.qty;lines.push({p:c.product,s:o.store,v:o.price*c.qty})}if(ok){let travel=set.reduce((sum,s)=>{let ds=prices.filter(p=>p.store===s&&p.distance_km!=null).map(p=>p.distance_km);return sum+(ds.length?Math.min(...ds):0)*2*fuel},0);plans.push({set,total,travel,grand:total+travel,lines})}}plans.sort((a,b)=>a.grand-b.grand);$("#plans").innerHTML=plans.slice(0,3).map((p,i)=>`<article class="card plan ${i===0?"best":""}"><h2>${i===0?"Rekommenderad":"Alternativ "+(i+1)}</h2><div class="big">${money(p.grand)}</div><div class="muted">Varor ${money(p.total)} + resa ${money(p.travel)}</div><p><strong>${p.set.join(" + ")}</strong></p>${p.lines.map(x=>`<div class="row"><span>${x.p}<div class="muted">${x.s}</div></span><strong>${money(x.v)}</strong></div>`).join("")}</article>`).join("")}
+function renderFavs(){let a=prices.filter(p=>favs.includes(p.product)).sort((a,b)=>unit(a)-unit(b));$("#favList").innerHTML=a.length?a.slice(0,200).map(p=>`<div class="row"><span>${p.product}<div class="muted">${p.store}</div></span><strong>${money(unit(p))}${ul(p.unit)}</strong></div>`).join(""):'<div class="muted">Tryck på ☆ bredvid en vara.</div>'}
+function renderSources(){let s=data.meta?.sources||{};$("#sourceList").innerHTML=Object.entries(s).map(([k,v])=>`<div class="row"><span>${k}<div class="muted">${v.items||0} poster · ${v.files_checked||0} filer</div></span><strong>${v.status}</strong></div>`).join("")}
+function render(){options();renderList();renderCart();comparison($("#quickProduct").value,$("#quick"));renderCompare();renderPlans();renderFavs();renderSources();save()}
+window.addCart=x=>{let p=decodeURIComponent(x),c=cart.find(v=>v.product===p);c?c.qty++:cart.push({product:p,qty:1});render()}
+window.qty=(x,d)=>{let p=decodeURIComponent(x),c=cart.find(v=>v.product===p);if(!c)return;c.qty+=d;if(c.qty<=0)cart=cart.filter(v=>v.product!==p);render()}
+window.toggleFav=x=>{let p=decodeURIComponent(x);favs=favs.includes(p)?favs.filter(v=>v!==p):[...favs,p];render()}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$("#"+b.dataset.tab).classList.add("active");render()});
+["search","category","store","distance","sort"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",renderList));
+$("#quickProduct").onchange=()=>comparison($("#quickProduct").value,$("#quick"));$("#compareProduct").onchange=renderCompare;$("#compareSort").onchange=renderCompare;$("#fuel").oninput=renderPlans;$("#maxStores").onchange=renderPlans;$("#clear").onclick=()=>{cart=[];render()};$("#refresh").onclick=load;
+load();
+</script></body></html>

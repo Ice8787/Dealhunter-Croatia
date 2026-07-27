@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "generated_at": null,
+    "sources": {
+      "Konzum": {
+        "status": "not_run"
+      },
+      "Plodine": {
+        "status": "not_run"
+      },
+      "Lidl": {
+        "status": "not_run"
+      },
+      "Kaufland": {
+        "status": "not_run"
+      }
+    },
+    "note": "Run the GitHub Action to populate real prices."
+  },
+  "items": []
+}
