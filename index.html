@@ -3,24 +3,142 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Croatia Grocery Hunter</title>
+<meta name="theme-color" content="#0f766e">
+<link rel="manifest" href="manifest.webmanifest">
+<title>DealHunter Grocery Croatia</title>
 <style>
-body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;margin:0;background:#f5f7f8;color:#182126}header{background:#0f766e;color:#fff;padding:20px}.wrap{max-width:1100px;margin:auto;padding:20px}h1{margin:0}.card{background:#fff;border:1px solid #dde3e7;border-radius:16px;padding:16px;margin-bottom:16px}.controls{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}input,select,button{font:inherit;padding:10px;border-radius:10px;border:1px solid #d7dde2}button{cursor:pointer;background:#0f766e;color:#fff;border:none}.grid{display:grid;grid-template-columns:1fr 320px;gap:16px}.deal{display:grid;grid-template-columns:1fr auto;gap:12px;padding:14px 0;border-bottom:1px solid #e5e9ec}.deal:last-child{border-bottom:none}.muted{color:#6b7680;font-size:13px}.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.tag{background:#eef2f4;border-radius:999px;padding:4px 8px;font-size:12px}.good{background:#dcfce7;color:#166534}.warn{background:#ffedd5;color:#9a3412}.price{text-align:right}.price strong{font-size:22px}.old{text-decoration:line-through;color:#7a858e;font-size:13px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.secondary{background:#fff;color:#182126;border:1px solid #d7dde2}.listrow{display:flex;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid #e5e9ec}dialog{border:0;border-radius:16px;max-width:520px;width:calc(100% - 30px)}dialog input{width:100%;margin-bottom:10px}textarea{width:100%;min-height:140px}@media(max-width:800px){.grid{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}}@media(max-width:520px){.controls{grid-template-columns:1fr}.deal{grid-template-columns:1fr}.price{text-align:left}}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f4f7f6;color:#17211f}
+header{background:#0f766e;color:white;padding:18px}.wrap{max-width:1100px;margin:auto;padding:16px}
+.card{background:white;border:1px solid #dce5e2;border-radius:16px;padding:16px;margin-bottom:14px}
+.controls{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}
+input,select,button,textarea{font:inherit;padding:10px;border-radius:10px;border:1px solid #d7dfdc}
+button{background:#0f766e;color:white;border:none;font-weight:700}
+.secondary{background:white;color:#17211f;border:1px solid #d7dfdc}
+.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:14px}.tab{white-space:nowrap}.tab.active{background:#115e59}
+.panel{display:none}.panel.active{display:block}
+.grid{display:grid;grid-template-columns:1fr 330px;gap:14px}
+.item{display:grid;grid-template-columns:1fr auto;gap:12px;padding:14px 0;border-bottom:1px solid #e4ebe8}
+.item:last-child{border-bottom:none}.muted{color:#68736f;font-size:13px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.tag{background:#eef3f1;border-radius:999px;padding:4px 8px;font-size:12px}.good{background:#dcfce7;color:#166534}
+.price{text-align:right}.price strong{font-size:22px}.old{text-decoration:line-through;color:#7b8682;font-size:12px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #e4ebe8}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}.plan{border:2px solid #0f766e}
+dialog{border:0;border-radius:16px;max-width:600px;width:calc(100% - 30px)}dialog input,dialog select{width:100%;margin-bottom:10px}
+@media(max-width:800px){.grid,.compare{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.controls{grid-template-columns:1fr}.item{grid-template-columns:1fr}.price{text-align:left}}
 </style>
 </head>
 <body>
-<header><div class="wrap"><h1>🛒 Croatia Grocery Hunter</h1><div>Lokala matfynd i Pirovac med omnejd</div></div></header>
+<header><div class="wrap"><h1 style="margin:0">🛒 DealHunter Grocery Croatia</h1><div>Jämför matpriser i Pirovac med omnejd</div></div></header>
 <main class="wrap">
-<div class="toolbar"><button id="add">+ Lägg till fynd</button><button class="secondary" id="export">Exportera</button><button class="secondary" id="import">Importera</button></div>
-<div class="card controls"><input id="search" placeholder="Sök produkt eller butik"><select id="category"></select><select id="store"></select><select id="sort"><option value="score">Deal Score</option><option value="discount">Rabatt</option><option value="price">Lägsta pris</option><option value="distance">Närmaste butik</option></select></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+<button id="addBtn">+ Lägg till pris</button>
+<button class="secondary" id="exportBtn">Exportera</button>
+<button class="secondary" id="importBtn">Importera</button>
+</div>
+
+<div class="tabs">
+<button class="tab active" data-tab="prices">Alla priser</button>
+<button class="tab" data-tab="compare">Jämför vara</button>
+<button class="tab" data-tab="basket">Smart Basket</button>
+</div>
+
+<section id="prices" class="panel active">
+<div class="card controls">
+<input id="search" placeholder="Sök mjölk, potatis, butik...">
+<select id="category"></select>
+<select id="store"></select>
+<select id="sort"><option value="unit">Lägsta jämförpris</option><option value="discount">Största rabatt</option><option value="distance">Närmaste butik</option></select>
+</div>
 <div class="grid">
-<section class="card"><h2>Dagens fynd</h2><div id="deals"></div></section>
-<aside><div class="card"><h2>Inköpslista</h2><div id="cart"></div><p><strong>Totalt: <span id="total">€0.00</span></strong></p><button class="secondary" id="clear">Töm lista</button></div><div class="card"><h2>Butiker</h2><div id="stats"></div></div></aside>
-</div></main>
-<dialog id="dealDialog"><form method="dialog" id="dealForm"><h2>Lägg till fynd</h2><input name="name" placeholder="Produkt" required><input name="store" placeholder="Butik" required><input name="category" placeholder="Kategori" required><input name="price" type="number" step="0.01" placeholder="Pris €" required><input name="oldPrice" type="number" step="0.01" placeholder="Ordinarie pris €"><input name="distance" type="number" step="0.1" placeholder="Avstånd km"><input name="expires" type="date"><input name="reason" placeholder="Varför fyndet är bra"><div class="toolbar"><button value="cancel" class="secondary">Avbryt</button><button value="default">Spara</button></div></form></dialog>
-<dialog id="importDialog"><form method="dialog" id="importForm"><h2>Importera JSON</h2><textarea id="importText"></textarea><div class="toolbar"><button value="cancel" class="secondary">Avbryt</button><button value="default">Importera</button></div></form></dialog>
+<section class="card"><h2>Prislista</h2><div id="priceList"></div></section>
+<aside>
+<div class="card"><h2>Inköpslista</h2><div id="cart"></div><button class="secondary" id="clearCart">Töm lista</button></div>
+<div class="card"><h2>Butiker</h2><div id="stores"></div></div>
+</aside>
+</div>
+</section>
+
+<section id="compare" class="panel">
+<div class="card controls" style="grid-template-columns:2fr 1fr">
+<select id="compareProduct"></select>
+<select id="compareMode"><option value="unit">Jämförpris</option><option value="package">Förpackningspris</option></select>
+</div>
+<div class="compare" id="compareResult"></div>
+</section>
+
+<section id="basket" class="panel">
+<div class="card controls" style="grid-template-columns:1fr 1fr">
+<label>Resekostnad per km (€)<input id="fuel" type="number" step="0.01" value="0.25"></label>
+<label>Max butiker<select id="maxStores"><option>1</option><option selected>2</option><option>3</option></select></label>
+</div>
+<div class="compare" id="basketResult"></div>
+</section>
+</main>
+
+<dialog id="addDialog">
+<form method="dialog" id="addForm">
+<h2>Lägg till pris</h2>
+<input name="product" placeholder="Vara" required>
+<input name="category" placeholder="Kategori" required>
+<input name="emoji" placeholder="Emoji, t.ex. 🥛">
+<input name="store" placeholder="Butik" required>
+<input name="distance" type="number" step="0.1" placeholder="Avstånd km" required>
+<input name="price" type="number" step="0.01" placeholder="Pris €" required>
+<input name="oldPrice" type="number" step="0.01" placeholder="Ordinarie pris €">
+<input name="quantity" type="number" step="0.001" value="1" placeholder="Mängd" required>
+<select name="unit"><option value="l">liter</option><option value="kg">kg</option><option value="st">styck</option></select>
+<input name="checked" type="date">
+<input name="note" placeholder="Kommentar">
+<div style="display:flex;gap:8px"><button value="cancel" class="secondary">Avbryt</button><button value="default">Spara</button></div>
+</form>
+</dialog>
+
+<dialog id="importDialog">
+<form method="dialog" id="importForm">
+<h2>Importera JSON</h2>
+<textarea id="importText" style="width:100%;min-height:220px"></textarea>
+<div style="display:flex;gap:8px;margin-top:10px"><button value="cancel" class="secondary">Avbryt</button><button value="default">Importera</button></div>
+</form>
+</dialog>
+
 <script>
-const defaultDeals=[{id:"1",name:"Vattenmelon",store:"Studenac",category:"Frukt & grönt",price:0.59,oldPrice:1.09,distance:1.2,expires:"2026-07-29",reason:"Lågt sommarpris nära Pirovac"},{id:"2",name:"Kycklingfilé",store:"Lidl",category:"Kött",price:5.49,oldPrice:8.49,distance:17,expires:"2026-07-30",reason:"Bra kilopris för grill och matlådor"},{id:"3",name:"Ägg 10-pack",store:"Tommy",category:"Mejeri & ägg",price:1.79,oldPrice:2.69,distance:10,expires:"2026-07-30",reason:"Bra pris på vardagsvara"},{id:"4",name:"Blöjor storpack",store:"Kaufland",category:"Barn",price:12.99,oldPrice:19.99,distance:24,expires:"2026-07-31",reason:"Stor besparing om storleken passar"},{id:"5",name:"Tomater 1 kg",store:"Plodine",category:"Frukt & grönt",price:1.29,oldPrice:2.19,distance:18,expires:"2026-07-28",reason:"Tydlig prissänkning"}];
-let deals=JSON.parse(localStorage.getItem("cgh_deals")||"null")||defaultDeals;let cart=JSON.parse(localStorage.getItem("cgh_cart")||"[]");const $=s=>document.querySelector(s);const discount=d=>d.oldPrice?Math.round((1-d.price/d.oldPrice)*100):0;const score=d=>Math.max(0,Math.min(100,Math.round(45+discount(d)*0.8+(d.distance<=3?8:d.distance>20?-5:3))));const money=n=>"€"+Number(n||0).toFixed(2);function save(){localStorage.setItem("cgh_deals",JSON.stringify(deals));localStorage.setItem("cgh_cart",JSON.stringify(cart))}function opts(){const cats=[...new Set(deals.map(d=>d.category))],stores=[...new Set(deals.map(d=>d.store))];$("#category").innerHTML='<option value="">Alla kategorier</option>'+cats.map(x=>`<option>${x}</option>`).join("");$("#store").innerHTML='<option value="">Alla butiker</option>'+stores.map(x=>`<option>${x}</option>`).join("")}function render(){const q=$("#search").value.toLowerCase(),cat=$("#category").value,st=$("#store").value,sort=$("#sort").value;let arr=deals.filter(d=>(!q||[d.name,d.store,d.category].join(" ").toLowerCase().includes(q))&&(!cat||d.category===cat)&&(!st||d.store===st));const sorts={score:(a,b)=>score(b)-score(a),discount:(a,b)=>discount(b)-discount(a),price:(a,b)=>a.price-b.price,distance:(a,b)=>(a.distance||0)-(b.distance||0)};arr.sort(sorts[sort]);$("#deals").innerHTML=arr.map(d=>`<div class="deal"><div><h3>${d.name}</h3><div class="muted">${d.store} · ${d.distance||0} km</div><div class="tags"><span class="tag">${d.category}</span><span class="tag good">-${discount(d)}%</span><span class="tag warn">Score ${score(d)}</span></div><div class="muted" style="margin-top:8px">${d.reason||""}</div></div><div class="price"><strong>${money(d.price)}</strong><div class="old">${d.oldPrice?money(d.oldPrice):""}</div><button onclick="addCart('${d.id}')">+ Lista</button></div></div>`).join("")||"<p>Inga fynd matchar filtren.</p>";$("#cart").innerHTML=cart.map(x=>`<div class="listrow"><span>${x.name} × ${x.qty}</span><span>${money(x.price*x.qty)} <button class="secondary" onclick="removeCart('${x.id}')">×</button></span></div>`).join("")||"<p class='muted'>Listan är tom.</p>";$("#total").textContent=money(cart.reduce((s,x)=>s+x.price*x.qty,0));const stats={};deals.forEach(d=>{stats[d.store]=(stats[d.store]||0)+1});$("#stats").innerHTML=Object.entries(stats).map(([k,v])=>`<div class="listrow"><span>${k}</span><strong>${v} fynd</strong></div>`).join("");save()}window.addCart=id=>{const d=deals.find(x=>x.id===id),c=cart.find(x=>x.id===id);c?c.qty++:cart.push({id:d.id,name:d.name,price:d.price,qty:1});render()};window.removeCart=id=>{cart=cart.filter(x=>x.id!==id);render()};["search","category","store","sort"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",render));$("#clear").onclick=()=>{cart=[];render()};$("#add").onclick=()=>$("#dealDialog").showModal();$("#dealForm").addEventListener("submit",e=>{if(e.submitter.value==="cancel")return;e.preventDefault();const f=new FormData(e.target);deals.unshift({id:String(Date.now()),name:f.get("name"),store:f.get("store"),category:f.get("category"),price:+f.get("price"),oldPrice:+f.get("oldPrice")||null,distance:+f.get("distance")||0,expires:f.get("expires"),reason:f.get("reason")});e.target.reset();$("#dealDialog").close();opts();render()});$("#export").onclick=()=>{const b=new Blob([JSON.stringify(deals,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="croatia-grocery-deals.json";a.click()};$("#import").onclick=()=>$("#importDialog").showModal();$("#importForm").addEventListener("submit",e=>{if(e.submitter.value==="cancel")return;e.preventDefault();try{deals=JSON.parse($("#importText").value);$("#importDialog").close();opts();render()}catch(err){alert("Ogiltig JSON")}});opts();render();
+const SAMPLE=[
+{id:"1",product:"Mjölk 3,2%",category:"Mejeri",emoji:"🥛",store:"Studenac",distance:1.2,price:1.29,oldPrice:1.49,quantity:1,unit:"l",checked:"2026-07-27",note:"Exempeldata"},
+{id:"2",product:"Mjölk 3,2%",category:"Mejeri",emoji:"🥛",store:"Konzum",distance:11,price:1.19,oldPrice:1.39,quantity:1,unit:"l",checked:"2026-07-27",note:"Exempeldata"},
+{id:"3",product:"Mjölk 3,2%",category:"Mejeri",emoji:"🥛",store:"Lidl",distance:17,price:1.09,oldPrice:1.29,quantity:1,unit:"l",checked:"2026-07-27",note:"Exempeldata"},
+{id:"4",product:"Potatis",category:"Frukt & grönt",emoji:"🥔",store:"Studenac",distance:1.2,price:1.39,oldPrice:1.69,quantity:1,unit:"kg",checked:"2026-07-27",note:"Exempeldata"},
+{id:"5",product:"Potatis",category:"Frukt & grönt",emoji:"🥔",store:"Kaufland",distance:24,price:2.25,oldPrice:3.49,quantity:2.5,unit:"kg",checked:"2026-07-27",note:"2,5 kg säck · exempeldata"},
+{id:"6",product:"Potatis",category:"Frukt & grönt",emoji:"🥔",store:"Plodine",distance:18,price:0.99,oldPrice:1.39,quantity:1,unit:"kg",checked:"2026-07-27",note:"Exempeldata"},
+{id:"7",product:"Ägg M 10-pack",category:"Mejeri",emoji:"🥚",store:"Tommy",distance:10,price:1.79,oldPrice:2.49,quantity:10,unit:"st",checked:"2026-07-27",note:"Exempeldata"},
+{id:"8",product:"Kycklingfilé",category:"Kött",emoji:"🍗",store:"Lidl",distance:17,price:5.49,oldPrice:8.49,quantity:1,unit:"kg",checked:"2026-07-27",note:"Exempeldata"}];
+let prices=JSON.parse(localStorage.getItem("dhg_prices")||"null")||SAMPLE;
+let cart=JSON.parse(localStorage.getItem("dhg_cart")||"[]");
+const $=s=>document.querySelector(s),money=n=>"€"+Number(n||0).toFixed(2);
+const unitPrice=p=>p.price/p.quantity,unitLabel=u=>u==="l"?"/l":u==="kg"?"/kg":"/st";
+const discount=p=>p.oldPrice?Math.round((1-p.price/p.oldPrice)*100):0;
+function save(){localStorage.setItem("dhg_prices",JSON.stringify(prices));localStorage.setItem("dhg_cart",JSON.stringify(cart))}
+function opts(){let cats=[...new Set(prices.map(p=>p.category))],stores=[...new Set(prices.map(p=>p.store))],products=[...new Set(prices.map(p=>p.product))];$("#category").innerHTML='<option value="">Alla kategorier</option>'+cats.map(x=>`<option>${x}</option>`).join("");$("#store").innerHTML='<option value="">Alla butiker</option>'+stores.map(x=>`<option>${x}</option>`).join("");$("#compareProduct").innerHTML=products.map(x=>`<option>${x}</option>`).join("")}
+function renderPrices(){let q=$("#search").value.toLowerCase(),cat=$("#category").value,st=$("#store").value,sort=$("#sort").value;let a=prices.filter(p=>(!q||[p.product,p.store,p.category].join(" ").toLowerCase().includes(q))&&(!cat||p.category===cat)&&(!st||p.store===st));let s={unit:(a,b)=>unitPrice(a)-unitPrice(b),discount:(a,b)=>discount(b)-discount(a),distance:(a,b)=>a.distance-b.distance};a.sort(s[sort]);$("#priceList").innerHTML=a.map(p=>`<div class="item"><div><h3>${p.emoji||"🛒"} ${p.product}</h3><div class="muted">${p.store} · ${p.distance} km · ${p.checked||""}</div><div class="tags"><span class="tag good">${money(unitPrice(p))}${unitLabel(p.unit)}</span><span class="tag">-${discount(p)}%</span></div><div class="muted">${p.note||""}</div></div><div class="price"><strong>${money(p.price)}</strong><div class="old">${p.oldPrice?money(p.oldPrice):""}</div><button onclick="addCart('${p.product}')">+ Lista</button></div></div>`).join("")||"<p>Inga träffar.</p>"}
+function renderCart(){$("#cart").innerHTML=cart.map(x=>`<div class="row"><span>${x.product} × ${x.qty}</span><span><button class="secondary" onclick="qty('${x.product}',-1)">−</button> <button onclick="qty('${x.product}',1)">+</button></span></div>`).join("")||"<p class='muted'>Listan är tom.</p>"}
+function renderStores(){let s={};prices.forEach(p=>s[p.store]=(s[p.store]||0)+1);$("#stores").innerHTML=Object.entries(s).map(([k,v])=>`<div class="row"><span>${k}</span><strong>${v} priser</strong></div>`).join("")}
+function renderCompare(){let product=$("#compareProduct").value,mode=$("#compareMode").value;let a=prices.filter(p=>p.product===product).sort((x,y)=>(mode==="unit"?unitPrice(x):x.price)-(mode==="unit"?unitPrice(y):y.price));$("#compareResult").innerHTML=`<div class="card"><h2>${product}</h2>${a.map((p,i)=>`<div class="row"><span>${i===0?"🥇 ":""}${p.store}<div class="muted">${p.distance} km</div></span><strong>${money(mode==="unit"?unitPrice(p):p.price)}${mode==="unit"?unitLabel(p.unit):""}</strong></div>`).join("")}</div><div class="card"><h2>Bedömning</h2><p>${a.length?`Billigast: <strong>${a[0].store}</strong>`:"Ingen data"}</p></div>`}
+function combos(arr,k){let r=[];function f(i,c){if(c.length===k){r.push([...c]);return}for(let j=i;j<arr.length;j++){c.push(arr[j]);f(j+1,c);c.pop()}}f(0,[]);return r}
+function renderBasket(){if(!cart.length){$("#basketResult").innerHTML='<div class="card">Lägg till varor först.</div>';return}let fuel=+$("#fuel").value,max=+$("#maxStores").value,stores=[...new Set(prices.map(p=>p.store))],plans=[];for(let k=1;k<=max;k++)for(let set of combos(stores,k)){let total=0,ok=true,lines=[];for(let c of cart){let o=prices.filter(p=>p.product===c.product&&set.includes(p.store)).sort((a,b)=>unitPrice(a)-unitPrice(b))[0];if(!o){ok=false;break}total+=o.price*c.qty;lines.push(`${c.product}: ${o.store}`)}if(ok){let travel=set.reduce((s,st)=>s+Math.min(...prices.filter(p=>p.store===st).map(p=>p.distance))*2*fuel,0);plans.push({set,total,travel,grand:total+travel,lines})}}plans.sort((a,b)=>a.grand-b.grand);$("#basketResult").innerHTML=plans.slice(0,3).map((p,i)=>`<div class="card ${i===0?"plan":""}"><h2>${i===0?"Rekommenderad":"Alternativ "+(i+1)}</h2><h1>${money(p.grand)}</h1><div class="muted">Varor ${money(p.total)} + resa ${money(p.travel)}</div><p><strong>${p.set.join(" + ")}</strong></p>${p.lines.map(x=>`<div class="row">${x}</div>`).join("")}</div>`).join("")}
+function render(){opts();renderPrices();renderCart();renderStores();renderCompare();renderBasket();save()}
+window.addCart=p=>{let x=cart.find(c=>c.product===p);x?x.qty++:cart.push({product:p,qty:1});render()}
+window.qty=(p,d)=>{let x=cart.find(c=>c.product===p);x.qty+=d;if(x.qty<=0)cart=cart.filter(c=>c.product!==p);render()}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$("#"+b.dataset.tab).classList.add("active");render()});
+["search","category","store","sort"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",renderPrices));
+["compareProduct","compareMode"].forEach(id=>$("#"+id).addEventListener("change",renderCompare));
+["fuel","maxStores"].forEach(id=>$("#"+id).addEventListener("input",renderBasket));
+$("#clearCart").onclick=()=>{cart=[];render()};
+$("#addBtn").onclick=()=>{$("#addDialog").showModal();document.querySelector('[name="checked"]').value=new Date().toISOString().slice(0,10)};
+$("#addForm").addEventListener("submit",e=>{if(e.submitter.value==="cancel")return;e.preventDefault();let f=new FormData(e.target);prices.unshift({id:String(Date.now()),product:f.get("product"),category:f.get("category"),emoji:f.get("emoji"),store:f.get("store"),distance:+f.get("distance"),price:+f.get("price"),oldPrice:+f.get("oldPrice")||null,quantity:+f.get("quantity"),unit:f.get("unit"),checked:f.get("checked"),note:f.get("note")});e.target.reset();$("#addDialog").close();render()});
+$("#exportBtn").onclick=()=>{let b=new Blob([JSON.stringify(prices,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="dealhunter-grocery-prices.json";a.click()};
+$("#importBtn").onclick=()=>$("#importDialog").showModal();
+$("#importForm").addEventListener("submit",e=>{if(e.submitter.value==="cancel")return;e.preventDefault();try{prices=JSON.parse($("#importText").value);$("#importDialog").close();render()}catch{alert("Ogiltig JSON")}});
+if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
+render();
 </script>
 </body></html>

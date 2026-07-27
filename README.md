@@ -1,21 +1,25 @@
-# Croatia Grocery Hunter
+# DealHunter Grocery Croatia
 
-## Starta direkt
-Öppna `index.html` i Safari, Chrome, Edge eller Firefox.
+GitHub Pages-klar matprisjämförelse för Pirovac med omnejd.
 
-## Starta via lokal webbserver
-Kör i mappen:
+## Ladda upp
+Ladda upp dessa filer till roten av ditt GitHub-repository:
+- index.html
+- manifest.webmanifest
+- sw.js
+- README.md
 
-```bash
-python3 -m http.server 8080
-```
-
-Öppna sedan `http://localhost:8080`.
+Aktivera sedan GitHub Pages:
+Settings → Pages → Deploy from a branch → main → /(root)
 
 ## Funktioner
-- Filtrering på produkt, kategori och butik
-- Sortering efter Deal Score, rabatt, pris eller avstånd
-- Lokal inköpslista
-- Egna fynd
+- Jämför literpris, kilopris och styckpris
+- Se billigaste butik för mjölk, potatis och andra varor
+- Smart Basket väger pris mot reskostnad
+- Egna prisposter
 - Import/export av JSON
-- Lokal lagring i webbläsaren
+- Lokal lagring på mobilen
+- Kan läggas till på iPhone-hemskärmen
+
+## Viktigt
+De inbyggda priserna är exempeldata och ska ersättas med verkliga priser.
